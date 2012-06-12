@@ -82,7 +82,7 @@ class tlwp_custom_post
 				'menu_position' => 5, // this is optional, removing it puts the item at the bottom of the menu
 				
 				// the menu icon must be 16x16, and for the hover shade change, you'll need two versions
-				'menu_icon' => plugins_url( 'icon-shaded-16x16.png', __FILE__ ),
+				'menu_icon' => plugins_url( 'icon-color-16x16.png', __FILE__ ),
 				
 				// delete the ones you do not need
 				'supports' => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'trackbacks', 'custom-fields', 'comments', 'revisions', 'page-attributes', 'post-formats' ),
