@@ -59,7 +59,7 @@ class tlwp_custom_post
 			$this->options['database_post_type'],
 			array(
 				'labels' => array(
-					'name' => _x( $name.'s', 'post type general name' )
+					'name' => _x( $name.'s', 'post type general name' ),
 					'singular_name' => _x( $name, 'post type singular name' ),
 					'add_new' => _x('Add New', $this->options['database_post_type'] ),
 					'add_new_item' => __( 'Add New '.$name ),
@@ -80,7 +80,10 @@ class tlwp_custom_post
 				'capability_type' => 'post',
 				'hierarchical' => false,
 				'menu_position' => 5, // this is optional, removing it puts the item at the bottom of the menu
-				'menu_icon' => plugins_url( 'tl_custom_post/icon-16x16.png' ),
+				
+				// the menu icon must be 16x16, and for the hover shade change, you'll need two versions
+				'menu_icon' => plugins_url( 'icon-shaded-16x16.png', __FILE__ ),
+				
 				// delete the ones you do not need
 				'supports' => array( 'title', 'editor', 'author', 'thumbnail', 'excerpt', 'trackbacks', 'custom-fields', 'comments', 'revisions', 'page-attributes', 'post-formats' ),
 				'map_meta_cap' => true,
