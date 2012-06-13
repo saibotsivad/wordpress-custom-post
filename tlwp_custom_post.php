@@ -6,6 +6,7 @@ Description: Add a custom post and modify the permalink structure for it.
 Version: 0.1
 Author: Tobias Labs
 Author URI: http://tobiaslabs.com/
+License: Public Domain
 */
 
 $tlwp_custom_post = new tlwp_custom_post;
