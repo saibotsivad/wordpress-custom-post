@@ -29,6 +29,12 @@ class tlwp_custom_post
 		register_activation_hook( __FILE__, array( $this, 'activation' ) );
 		register_deactivation_hook( __FILE__, array( $this, 'deactivation' ) );
 		
+		// this is needed for styling the custom post icon
+		add_action( 'admin_head', array( $this, 'custom_post_header' ) );
+		
+		// this will include the custom posts in the normal post loop
+		add_action( 'pre_get_posts', array( $this, 'include_custom_post' ) );
+		
 		// the basic setup is here
 		add_action( 'init', array( $this, 'init' ) );
 		add_filter( 'post_type_link', array( $this, 'post_permalink' ), 10, 3 );
@@ -40,11 +46,50 @@ class tlwp_custom_post
 		$this->post_rewrite( true );
 	}
 	
+	function custom_post_header()
+	{
+		global $post_type;
+		echo "<style>";
+		if ( ( $_GET['post_type'] == $this->options['database_post_type'] ) || ( $post_type == $this->options['database_post_type'] ) )
+		{
+			// this is the icon on the "add new" custom post page
+			?>#icon-edit { background:transparent url('<?php echo plugins_url( 'tlwp_icon-32x32.png', __FILE__ ); ?>') no-repeat; }<?php
+		}
+		// these are the icons on hte admin menu
+		?>
+		#adminmenu #menu-posts-<?php echo $this->options['database_post_type']; ?> div.wp-menu-image{background:transparent url("<?php echo plugins_url( 'tlwp_icon-gray-16x16.png', __FILE__ ); ?>") no-repeat center center;}
+		#adminmenu #menu-posts-<?php echo $this->options['database_post_type']; ?>:hover div.wp-menu-image,#adminmenu #menu-posts-<?php echo $this->options['database_post_type']; ?>.wp-has-current-submenu div.wp-menu-image{background:transparent url("<?php echo plugins_url( 'tlwp_icon-color-16x16.png', __FILE__ ); ?>") no-repeat center center;}
+		<?php
+		echo "</style>";
+	}
+	
 	function deactivation()
 	{
 		// this is done on deactivation to make sure links to the custom
 		// permalink schema are not kept in the redirect rules
 		flush_rewrite_rules();
+	}
+	
+	function include_custom_post( $query )
+	{
+		// don't break the admin or preview pages (remove !is_feed() if you want the loop to show in the RSS feed)
+		if ( !is_preview() && !is_admin() && !is_singular() && !is_feed() )
+		{
+			// we need the default post types for the loop, which are the built-in types and the custom public ones
+			$post_types = get_post_types(
+				array( 'public' => true, '_builtin' => false ),
+				'names',
+				'and'
+			);
+			// add 
+			$new_post_types = array( 'post', $this->options['database_post_type'] );
+			$post_types = array_merge( $post_types, $new_post_types );
+			$my_post_type = get_query_var( 'post_type' );
+			if ( empty( $my_post_type ) )
+			{
+				$query->set( 'post_type', $post_types );
+			}
+		}
 	}
 	
 	function init()
